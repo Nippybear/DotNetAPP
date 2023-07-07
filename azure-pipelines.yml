@@ -6,7 +6,7 @@ stages:
   jobs:
   - job: Build
     pool:
-     name: Default
+     vmImage: 'windows-2016'
     steps:
     - task: DotNetCoreCLI@2
       inputs:

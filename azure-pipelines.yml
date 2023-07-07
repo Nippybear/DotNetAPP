@@ -8,12 +8,6 @@ stages:
     pool:
      name: Default
     steps:
-    - task: VSBuild@1
+    - task: DotNetCoreCLI@2
       inputs:
-        solution: '**\*.sln'
-        msbuildArgs: '''/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\"'''
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
+        command: 'build'

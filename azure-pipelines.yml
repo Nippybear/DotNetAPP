@@ -1,6 +1,6 @@
 name: Multistage_Pipeline_$(Date:yyyyMMdd) ($Rev:.r)
 trigger: 
-  - Main
+  - None
 stages:
 - stage: BuildtheAPP
   jobs:

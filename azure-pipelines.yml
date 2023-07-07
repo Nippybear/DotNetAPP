@@ -1,4 +1,4 @@
-name: Multistage_Pipeline_$(Date:yyyyMMdd) ($Rev:.r)
+name: Multistage_Pipeline
 trigger: 
   - None
 stages:
@@ -17,13 +17,43 @@ stages:
         restoreSolution: '**/*.sln'
         feedsToUse: 'select'
     - task: DotNetCoreCLI@2
+      name: 'Restore'
+      displayName: 'Restore Code'
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
+        feedsToUse: 'select'
+    
+    - task: DotNetCoreCLI@2
+      name: 'Build'
+      displayName: 'Building Code'
       inputs:
         command: 'build'
-        projects: '$(Build.ArtifactStagingDirectory)'
+        projects: '**/*.csproj'
+        arguments: '--configuration $(BuildConfiguration)'
+        
+    - task: DotNetCoreCLI@2
+      name: 'test'
+      displayName: 'Testing Code'
+      inputs:
+        command: 'test'
+        projects: '**/*.csproj'
+        arguments: '--configuration $(BuildConfiguration)'
+        testRunTitle: 'Unit Test'
+        
+    - task: DotNetCoreCLI@2
+      name: 'Publish'
+      displayName: 'Publish Code'
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+        arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+        
     
     - task: PublishBuildArtifacts@1
+      name: 'PublishArtifact'
+      displayName: 'Publish Artifact'
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'TestprojArtifact'
+        ArtifactName: 'BuildArtifact'
         publishLocation: 'Container'
-        

@@ -57,3 +57,27 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'BuildArtifact'
         publishLocation: 'Container'
+        
+- stage: DeployApp
+  jobs: 
+  - job: Deploy
+  pool:
+   vmimage: 'Windows-latest'
+   steps:
+   - task: DownloadBuildArtifacts@1
+     name: 'DownloadArtifact'
+     displayName: 'Downloading Artifact'
+     inputs:
+       buildType: 'current'
+       downloadType: 'specific'
+       downloadPath: '$(System.ArtifactsDirectory)'
+
+   - task: AzureRmWebAppDeployment@4
+     name: 'DeployAPP'
+     displayName: 'Deploying App'
+     inputs:
+       ConnectionType: 'AzureRM'
+       azureSubscription: 'ARM Service Connection'
+       appType: 'webApp'
+       WebAppName: 'AppYamlAppservice'
+       packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'

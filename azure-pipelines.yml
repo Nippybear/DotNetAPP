@@ -8,14 +8,16 @@ stages:
     pool:
      name: Default
     steps:
-    - task: DotNetCoreCLI@2
+    - task: VSBuild@1
       inputs:
-        command: 'build'
-    - task: DotNetCoreCLI@2
+        solution: '**\*.sln'
+        msbuildArgs: '''/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\"'''
+    - task: PublishBuildArtifacts@1
       inputs:
-        command: 'publish'
-        publishWebProjects: true
-        
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+    
 - stage: DeployApp
   jobs:
   - job: Deploy
@@ -33,6 +35,6 @@ stages:
         azureSubscription: 'ARM Service Connection'
         appType: 'webApp'
         WebAppName: 'AppYamlAppservice'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-
-
+        packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
+    
+    

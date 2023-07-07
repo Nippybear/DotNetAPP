@@ -17,24 +17,3 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-    
-- stage: DeployApp
-  jobs:
-  - job: Deploy
-    pool: 
-      name: Default
-    steps:
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'specific'
-        downloadPath: '$(System.ArtifactsDirectory)'
-    - task: AzureRmWebAppDeployment@4
-      inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: 'ARM Service Connection'
-        appType: 'webApp'
-        WebAppName: 'AppYamlAppservice'
-        packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
-    
-    

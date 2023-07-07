@@ -6,9 +6,17 @@ stages:
   jobs:
   - job: Build
     pool:
-     vmImage: 'windows-2019'
+     vmImage: 'windows-latest'
     steps:
-    - task: DotNetCoreCLI@2
+    - task: NuGetToolInstaller@1
+      name: 'NugetToolInstaller'
+      displayName: 'Nuget Tool Installer'
+    - task: NuGetCommand@2
       inputs:
-        command: 'build'
-        arguments: '''/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\"'''
+        command: 'restore'
+        restoreSolution: '**/*.sln'
+        feedsToUse: 'select'
+        
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'build'

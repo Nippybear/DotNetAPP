@@ -8,6 +8,7 @@ stages:
     pool:
      vmImage: 'windows-2019'
     steps:
-    - task: DotNetCoreCLI@2
+    - task: VSBuild@1
       inputs:
-        command: 'build'
+        solution: '**\*.sln'
+        msbuildArgs: '''/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\"'''

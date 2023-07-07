@@ -1,6 +1,6 @@
 name: Multistage_Pipeline
 trigger: 
-  - None
+  - Main
 stages:
 - stage: BuildtheAPP
   jobs:
